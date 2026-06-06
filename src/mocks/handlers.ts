@@ -4,7 +4,7 @@ import type { App } from '../types/types'
 const generateId = () => Math.random().toString(36).substring(2, 10)
 const now = () => new Date().toISOString()
 
-let todos: App[] = [
+let apps: App[] = [
   {
     id: generateId(),
     title: 'Set up project architecture',
@@ -26,7 +26,7 @@ let todos: App[] = [
   {
     id: generateId(),
     title: 'Implement CRUD operations',
-    description: 'Add, edit, delete, and toggle todos via the context + API layer.',
+    description: 'Add, edit, delete, and toggle items via the context + API layer.',
     completed: false,
     priority: 'high',
     createdAt: new Date(Date.now() - 86400000).toISOString(),
@@ -44,7 +44,7 @@ let todos: App[] = [
   {
     id: generateId(),
     title: 'Record walkthrough video',
-    description: '', 
+    description: '',
     completed: false,
     priority: 'low',
     createdAt: new Date(Date.now() - 3600000).toISOString(),
@@ -53,15 +53,15 @@ let todos: App[] = [
 ]
 
 export const handlers = [
-  http.get('/api/todos', async () => {
+  http.get('/api/apps', async () => {
     await delay(400)
-    return HttpResponse.json(todos)
+    return HttpResponse.json(apps)
   }),
 
-  http.post('/api/todos', async ({ request }) => {
+  http.post('/api/apps', async ({ request }) => {
     await delay(300)
     const body = await request.json() as { title: string; description?: string; priority?: string }
-    const newTodo: App = {
+    const newApp: App = {
       id: generateId(),
       title: body.title,
       description: body.description ?? '',
@@ -70,22 +70,22 @@ export const handlers = [
       createdAt: now(),
       updatedAt: now(),
     }
-    todos = [newTodo, ...todos]
-    return HttpResponse.json(newTodo, { status: 201 })
+    apps = [newApp, ...apps]
+    return HttpResponse.json(newApp, { status: 201 })
   }),
 
-  http.patch('/api/todos/:id', async ({ params, request }) => {
+  http.patch('/api/apps/:id', async ({ params, request }) => {
     await delay(250)
     const updates = await request.json() as Partial<App>
-    const idx = todos.findIndex(t => t.id === params.id)
+    const idx = apps.findIndex(t => t.id === params.id)
     if (idx === -1) return HttpResponse.json({ error: 'not found' }, { status: 404 })
-    todos[idx] = { ...todos[idx], ...updates, updatedAt: now() }
-    return HttpResponse.json(todos[idx])
+    apps[idx] = { ...apps[idx], ...updates, updatedAt: now() }
+    return HttpResponse.json(apps[idx])
   }),
 
-  http.delete('/api/todos/:id', async ({ params }) => {
+  http.delete('/api/apps/:id', async ({ params }) => {
     await delay(250)
-    todos = todos.filter(t => t.id !== params.id)
+    apps = apps.filter(t => t.id !== params.id)
     return new HttpResponse(null, { status: 204 })
   }),
 ]
