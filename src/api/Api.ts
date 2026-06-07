@@ -1,6 +1,6 @@
 import type { App, CreateAppPayload, UpdateAppPayload } from '../types/types';
 
-const BASE = '/api/Apps';
+const BASE = '/api/apps';
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
